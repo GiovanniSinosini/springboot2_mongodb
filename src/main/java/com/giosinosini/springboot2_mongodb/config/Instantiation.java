@@ -1,12 +1,16 @@
 package com.giosinosini.springboot2_mongodb.config;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
+import com.giosinosini.springboot2_mongodb.domain.Post;
 import com.giosinosini.springboot2_mongodb.domain.User;
+import com.giosinosini.springboot2_mongodb.repository.PostRepository;
 import com.giosinosini.springboot2_mongodb.repository.UserRepository;
 
 
@@ -16,15 +20,26 @@ public class Instantiation implements CommandLineRunner {     // initial databas
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private PostRepository postRepository;    // possibility to save to the database
+	
 	@Override
 	public void run(String... args) throws Exception {
 	
-		userRepository.deleteAll();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		userRepository.deleteAll();   // clear collection
+		postRepository.deleteAll();
 		
 		User maria = new User(null, "Maria Brown", "maria@gmail.com");
 		User alex = new User(null, "Alex Green", "alex@gmail.com");
 		User bob = new User(null, "Bob Grey", "bob@gmail.com");
 		
+		Post post1 = new Post(null, sdf.parse("21/03/2018"), "Partiu viagem", "Vou viajar para São Paulo. Abraço!", maria);
+		Post post2 = new Post(null, sdf.parse("23/03/2018"), "Bom dia", "Acordei feliz hoje!!!", maria);
+		
 		userRepository.saveAll(Arrays.asList(maria, alex, bob));
+		postRepository.saveAll(Arrays.asList(post1, post2));
 	}
 }
