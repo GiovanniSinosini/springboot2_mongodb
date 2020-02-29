@@ -44,6 +44,14 @@ public class UserResource {   //back-end
 		User obj = service.fromDTO(objDto); 
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();   // get the address of the new object
-		return ResponseEntity.created(uri).build();     // created = return 201 code
+		return ResponseEntity.created(uri).build();     // created = returns code 201
 	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable String id){           
+		service.delete(id);
+		return ResponseEntity.noContent().build();     // noContent = returns code 204
+	}
+	
+	
 }
